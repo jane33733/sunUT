@@ -58,10 +58,7 @@ COLLATE='utf8_general_ci'
 ENGINE=InnoDB
 ;
 
--- 正在導出表  model_practice.sun_batch 的資料：~1 rows (大約)
-INSERT INTO `sun_batch` (`id`, `cron_str`, `run_time`, `update_time`, `update_user`) VALUES
-	('A', '0 0 9 * * ?', '09:00:00', '2017-06-16 14:25:56', 'A001'),
-	('B', '0 0 20 * * ?', '20:00:00', '2017-06-16 14:28:18', 'A001');
+
 
 	
 
