@@ -1,6 +1,7 @@
 
 package com.sun.config;
 
+import java.io.InputStream;
 import java.util.Properties;
 
 import javax.sql.DataSource;
@@ -21,13 +22,23 @@ public class DataBaseConfig {
 	@Bean(name = "dataSource")
     public DataSource getDataSource() {
         final org.apache.commons.dbcp.BasicDataSource dataSource = new BasicDataSource();
-        dataSource.setDriverClassName("com.mysql.jdbc.Driver");
-        dataSource.setUrl("jdbc:mysql://localhost:3306/model_practice");
-//        dataSource.setDriverClassName("com.p6spy.engine.spy.P6SpyDriver");
-//        dataSource.setUrl("jdbc:p6spy:mysql://localhost:3306/wrel");
-        dataSource.setUsername("root");
-        dataSource.setPassword("123456q");
+        
+        Properties properties = new Properties();
+        
+        try {
 
+        	ClassLoader loader = Thread.currentThread().getContextClassLoader();   
+        	InputStream stream = loader.getResourceAsStream("jdbc.properties");        
+        	properties.load(stream);
+
+        	dataSource.setDriverClassName(properties.getProperty("db.driver"));
+        	dataSource.setUrl(properties.getProperty("db.url"));
+        	dataSource.setUsername(properties.getProperty("db.username"));
+        	dataSource.setPassword(properties.getProperty("db.password"));
+        	
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
         return dataSource;
     }
 
