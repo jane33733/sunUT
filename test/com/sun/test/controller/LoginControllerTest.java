@@ -5,8 +5,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
-import org.springframework.mock.web.MockHttpSession;
-import org.springframework.security.web.FilterChainProxy;
+
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -53,7 +52,17 @@ public class LoginControllerTest {
 	public void testloginValidateSucess(){
 		
 		
+		//MockHttpServletRequest request = new MockHttpServletRequest();
+		MockHttpServletRequest mockReq = new MockHttpServletRequest("POST", "/login/validate");
 		
+		mockReq.addParameter("account", "haha");
+		mockReq.addParameter("password", "123");
+			  
+	    MockHttpServletResponse response = new MockHttpServletResponse();
+	    
+	    //mockMvc.perform(post("/login/validate")).
+	    //andExpect( redirectedUrl( "pages/feature/productInfo.jsp" );
+
 		
 	}
 }
