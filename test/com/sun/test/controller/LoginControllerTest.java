@@ -52,16 +52,6 @@ public class LoginControllerTest {
 	public void testloginValidateSucess(){
 		
 		
-		//MockHttpServletRequest request = new MockHttpServletRequest();
-		MockHttpServletRequest mockReq = new MockHttpServletRequest("POST", "/login/validate");
-		
-		mockReq.addParameter("account", "haha");
-		mockReq.addParameter("password", "123");
-			  
-	    MockHttpServletResponse response = new MockHttpServletResponse();
-	    
-	    //mockMvc.perform(post("/login/validate")).
-	    //andExpect( redirectedUrl( "pages/feature/productInfo.jsp" );
 
 		
 	}
