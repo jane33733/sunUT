@@ -128,11 +128,11 @@ dependencies {
     compile 'org.codehaus.jackson:jackson-mapper-asl:1.8.3'
     compile 'org.codehaus.jackson:jackson-core-asl:1.8.3'
     
-    //exclude the build in hamcrest
-    testCompile('junit:junit:' + junitVersion) {
-        exclude group: 'org.hamcrest'
-    }
-    testCompile 'org.hamcrest:hamcrest-library:' + hamcrestVersion
+    // Unit testing dependencies
+    testCompile 'junit:junit:4.12'
+    testCompile 'org.hamcrest:hamcrest-library:1.3'
+    testCompile group: 'org.mockito', name: 'mockito-all', version: '1.8.4'
+    
     testCompile 'org.springframework:spring-test:' + springVersion
     
 	//include in compile only, exclude in the war
@@ -143,7 +143,6 @@ dependencies {
   	compile 'org.quartz-scheduler:quartz:2.2.2'
   	compile 'org.springframework:spring-context-support:4.1.8.RELEASE'
     
-    testCompile 'junit:junit:4.12'
 }
 
 compileJava.options.encoding = 'UTF-8'
