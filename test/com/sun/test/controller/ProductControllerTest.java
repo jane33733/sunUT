@@ -13,12 +13,12 @@ public class ProductControllerTest {
 
 	private MockMvc mockMvc;
 	
-	@Inject
+//	@Inject
     private WebApplicationContext wac;
 
 	@Test
 	public void testGetByPrice() throws Exception {
-
+		System.out.println("get price test");
 	}
 
 	@Test
