@@ -25,13 +25,11 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import com.google.gson.Gson;
 import com.sun.controller.ProductController;
 import com.sun.entity.Product;
-import com.sun.request.vo.LoginVO;
 import com.sun.request.vo.ProductQueryVO;
 import com.sun.respose.vo.ProductInfoVO;
 import com.sun.service.ProductService;
 
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
