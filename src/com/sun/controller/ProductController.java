@@ -43,7 +43,7 @@ public class ProductController  {
     @ResponseBody
     @RequestMapping(value = "getByPrice", method = RequestMethod.POST)
     public List<Product> getByPrice(@RequestBody ProductQueryVO queryVO) throws Exception {
-        LOGGER.debug("[getByPrice]------ Start "+queryVO.getPriceBottom());
+        // LOGGER.debug("[getByPrice]------ Start "+queryVO.getPriceBottom());
 //        System.out.println("[getByPrice]------ Start "+queryVO.getPriceBottom());
         return productService.searchByCondition(queryVO);
     }
