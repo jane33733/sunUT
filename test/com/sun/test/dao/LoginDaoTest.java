@@ -1,6 +1,10 @@
 package com.sun.test.dao;
 
 import static org.junit.Assert.*;
+
+import java.util.Date;
+
+import org.hibernate.SessionFactory;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.sun.config.DataBaseConfig;
 import com.sun.dao.LoginDao;
+import com.sun.entity.SunAccount;
 import com.sun.request.vo.LoginVO;
 import com.sun.respose.vo.LoginInfoVO;
 
@@ -25,6 +30,9 @@ public class LoginDaoTest {
 
 	@Autowired
 	private LoginDao loginDao;
+	
+	@Autowired
+    protected SessionFactory sessionFactory;
 
 	private LoginVO loginVO;
 
@@ -32,9 +40,12 @@ public class LoginDaoTest {
 	@Rollback(true)
 	public void queryLoginInfoTest() {
 
+		this.createUser("test", "321");
+		
+		
 		loginVO = new LoginVO();
-		loginVO.setAccount("haha");
-		loginVO.setPassword("123");
+		loginVO.setAccount("test");
+		loginVO.setPassword("321");
 		LoginInfoVO info = loginDao.queryLoginInfo(loginVO);
 		assertNotNull(info);
 		assertEquals(info.getAccount(), loginVO.getAccount());
@@ -42,9 +53,18 @@ public class LoginDaoTest {
 		System.out.println("queryLoginInfoTest done");
 	}
 	
+//	@Test
+//	@Rollback(true)
+//	public void createUserTest() {
+//		this.createUser("test","asdf");
+//		
+//	}
+	
 	@Test
 	@Rollback(true)
 	public void queryLoginFailTest() {
+		
+		this.createUser("test", "321");
 
 		loginVO = new LoginVO();
 		loginVO.setAccount("william");
@@ -53,6 +73,17 @@ public class LoginDaoTest {
 		assertNull(info);
 
 		System.out.println("queryLoginFailTest done");
+	}
+	
+	private void createUser(String name, String password) {
+		SunAccount account = new SunAccount();
+		account.setAccount(name);
+		account.setPassword(password);
+		account.setId("02");
+		account.setStatus(false);
+		account.setUserId("001");
+		account.setCreateTime(new Date());
+		this.sessionFactory.getCurrentSession().save(account);
 	}
 
 }
