@@ -13,10 +13,10 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
+import static org.mockito.Matchers.any;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 
 import org.mockito.MockitoAnnotations;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.sun.controller.LoginController;
 import com.sun.request.vo.LoginVO;
@@ -26,27 +26,14 @@ import static org.mockito.Mockito.when;
 
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import static org.mockito.Matchers.any;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-
-
 
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
-//@ContextConfiguration(locations = {"/WebContent/WEB-INF/context-dispatcher.xml"})
-
-//@ContextConfiguration(locations = {"file:WebContent/WEB-INF/context-dispatcher.xml","file:WebContent/WEB-INF/applicationContext.xml"})
-
 @ContextConfiguration("file:WebContent/WEB-INF/context-dispatcher.xml")
-	//"file:WebContent/WEB-INF/applicationContext.xml",
-	//"file:WebContent/WEB-INF/spring-views.xml"
-//	})
-
-
 
 public class LoginControllerTest {
-	private static final Logger LOGGER = LoggerFactory.getLogger(LoginControllerTest.class);
+	
 	private MockMvc mockMvc;
 
 	@Mock
@@ -61,8 +48,7 @@ public class LoginControllerTest {
 
 	 @Before
 	 public void setup() {
-		 //mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
-		 
+		 //mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();		 
 		 mockMvc = MockMvcBuilders.standaloneSetup(loginController).build();
 		 MockitoAnnotations.initMocks(this);
 	 }
@@ -71,10 +57,7 @@ public class LoginControllerTest {
 	@Test
 	public void testloginValidateSucess() throws Exception{
 		
-//		LoginVO mockloginVO = new LoginVO();
-//		mockloginVO.setAccount("haha");
-//		mockloginVO.setPassword("123"); 
-		
+	
 		LoginInfoVO mockloginInfoVO = new LoginInfoVO();
 		mockloginInfoVO.setAccount("haha");
 		mockloginInfoVO.setAccountId("1");
@@ -82,20 +65,14 @@ public class LoginControllerTest {
 		mockloginInfoVO.setUserName("張韶涵");
 		mockloginInfoVO.setIsExist(true);
 		
-		
-		//Mockito cannot mock static method:
-		//when(LoginVO.getInstance(mockRequest)).thenReturn(mockloginVO);
-		
-		
-		//when(mockloginService.validateUser(mockloginVO)).thenReturn(mockloginInfoVO);
 		when(mockloginService.validateUser(any(LoginVO.class))).thenReturn(mockloginInfoVO);
 
 
 		mockMvc.perform(post("/login/validate")
-	    .param( "account", "haha" )
-	    .param( "password", "123" ))
-	    .andDo(print())
-	    .andExpect( redirectedUrl( "pages/feature/productInfo.jsp" ))
+				.param( "account", "haha" )
+				.param( "password", "123" ))
+		.andDo(print())
+		.andExpect( redirectedUrl( "pages/feature/productInfo.jsp" ))
 		.andExpect(content().string("false"));
 	}
 	
@@ -109,10 +86,10 @@ public class LoginControllerTest {
 		when(mockloginService.validateUser(any(LoginVO.class))).thenReturn(mockloginInfoVO);
 		
 		mockMvc.perform(post("/login/validate")
-	    .param( "account", "haha" )
-	    .param( "password", "123" ))
+				.param( "account", "haha" )
+				.param( "password", "123" ))
 		.andDo(print())
-	    .andExpect(redirectedUrl( "\\pages\\error\\errorSimple.jsp" ))
+		.andExpect(redirectedUrl( "\\pages\\error\\errorSimple.jsp" ))
 		.andExpect(content().string("false"));
 	}
 	
@@ -123,10 +100,9 @@ public class LoginControllerTest {
 		when(mockloginService.validateUser(any(LoginVO.class))).thenReturn(null);
 		
 	    mockMvc.perform(post("/login/validate")
-	    .param( "account", "haha" )
-	    .param( "password", "123" ))
+	    		.param( "account", "haha" )
+	    		.param( "password", "123" ))
 	    .andDo(print())
-	    //.andExpect(status().isNotFound());
 	    .andExpect(content().string("false"));
 	}
 }
