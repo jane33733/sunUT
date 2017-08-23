@@ -1,26 +1,28 @@
 package com.sun.test.service;
 
-import static org.junit.Assert.fail;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
-import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import com.sun.dao.LoginDao;
 import com.sun.request.vo.LoginVO;
+import com.sun.respose.vo.LoginInfoVO;
 import com.sun.service.LoginService;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-//@ContextConfiguration(locations = {"classpath:spring-mvc.xml", "classpath:spring-service.xml",
-//"classpath:spring-mapper-test.xml"})
+@ContextConfiguration("file:WebContent/WEB-INF/context-dispatcher.xml")
 @WebAppConfiguration
 public class LoginServiceTest {
 
@@ -30,31 +32,38 @@ public class LoginServiceTest {
 	@Autowired
 	private LoginService loginService;
 	
-	private MockMvc mockMvc;
+	@Mock
+	@Autowired
+	private LoginDao loginDao;
+		
+	@Before
+    public void setup() {
+        MockitoAnnotations.initMocks(this);
+    }
 	
 	@Test
-	public void test() {
+	public void loginSuccess() {
+				
+		LoginInfoVO loginInfoVO = new LoginInfoVO();
+		loginInfoVO.setIsExist(true);
 		
+		LoginVO loginVO = mock(LoginVO.class);
+    	when(loginService.validateUser(loginVO)).thenReturn(loginInfoVO);
+    	
+	}
+	
+	@Test
+	public void loginFail() {
+			
 		LoginVO loginVO = new LoginVO();
-		loginVO.setAccount("haha");
-		loginVO.setPassword("123");
+		loginVO.setAccount("noThisOne");
+		loginVO.setPassword("wrongPassword");
 		
+		LoginInfoVO loginInfoVO = new LoginInfoVO();
+		loginInfoVO.setIsExist(false);
+		
+    	when(loginService.validateUser(loginVO)).thenReturn(loginInfoVO);
 
-
-		//這個看起來是驗證RESTFUL API?
-		
-        try {
-			mockMvc.perform(MockMvcRequestBuilders
-			        .get("url")
-			        .accept(MediaType.APPLICATION_JSON))
-			        .andDo(mvcResult -> Assert.assertEquals(loginVO, loginService.validateUser(loginVO) ) );
-		} catch (Exception e) {
-			log.error("mockMvc error : {}",e);
-			e.printStackTrace();
-		}
-		
-		loginService.validateUser(loginVO);
-		fail("Not yet implemented");
 	}
 
 }
