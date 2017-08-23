@@ -9,8 +9,6 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -22,11 +20,11 @@ import com.sun.respose.vo.LoginInfoVO;
 import com.sun.service.LoginService;
 
 @RunWith(SpringJUnit4ClassRunner.class)
+//@RunWith(MockitoJUnitRunner.class)
 @ContextConfiguration("file:WebContent/WEB-INF/context-dispatcher.xml")
 @WebAppConfiguration
 public class LoginServiceTest {
 
-	private static final Logger log = LoggerFactory.getLogger(LoginServiceTest.class);
 	
 	@InjectMocks
 	@Autowired
@@ -44,25 +42,25 @@ public class LoginServiceTest {
 	@Test
 	public void loginSuccess() {
 				
+		LoginVO loginVO = new LoginVO();
+		loginVO.setAccount("haha");
+		loginVO.setPassword("123");
+		
 		LoginInfoVO loginInfoVO = new LoginInfoVO();
 		loginInfoVO.setIsExist(true);
 		
-		LoginVO loginVO = mock(LoginVO.class);
-    	when(loginService.validateUser(loginVO)).thenReturn(loginInfoVO);
-    	
+    	when(loginDao.queryLoginInfo(loginVO)).thenReturn(loginInfoVO);
+		loginService.validateUser(loginVO);
+		
 	}
 	
 	@Test
 	public void loginFail() {
-			
-		LoginVO loginVO = new LoginVO();
-		loginVO.setAccount("noThisOne");
-		loginVO.setPassword("wrongPassword");
 		
-		LoginInfoVO loginInfoVO = new LoginInfoVO();
-		loginInfoVO.setIsExist(false);
-		
-    	when(loginService.validateUser(loginVO)).thenReturn(loginInfoVO);
+		LoginVO loginVO = mock(LoginVO.class);
+		//指定loginDao.queryLoginInfo會回傳null資料，之後再呼叫要測試的Function
+    	when(loginDao.queryLoginInfo(loginVO)).thenReturn(null);
+    	loginService.validateUser(loginVO);
 
 	}
 
