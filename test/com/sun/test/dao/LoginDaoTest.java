@@ -5,6 +5,8 @@ import static org.junit.Assert.*;
 import java.util.Date;
 
 import org.hibernate.SessionFactory;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,12 +38,22 @@ public class LoginDaoTest {
 
 	private LoginVO loginVO;
 
+	private SunAccount account;
+	
 	@Test
 	@Rollback(true)
 	public void queryLoginInfoTest() {
 
-		this.createUser("test", "321");
-		
+//		this.createUser("test", "321");
+//		
+//		
+//		loginVO = new LoginVO();
+//		loginVO.setAccount("haha");
+//		loginVO.setPassword("123");
+//		LoginInfoVO info = loginDao.queryLoginInfo(loginVO);
+//		assertNotNull(info);
+//		assertEquals(info.getAccount(), loginVO.getAccount());
+
 		
 		loginVO = new LoginVO();
 		loginVO.setAccount("test");
@@ -49,22 +61,29 @@ public class LoginDaoTest {
 		LoginInfoVO info = loginDao.queryLoginInfo(loginVO);
 		assertNotNull(info);
 		assertEquals(info.getAccount(), loginVO.getAccount());
-
+		
 		System.out.println("queryLoginInfoTest done");
 	}
 	
-//	@Test
-//	@Rollback(true)
-//	public void createUserTest() {
-//		this.createUser("test","asdf");
-//		
-//	}
+	@Before
+	@Rollback(false)
+	public void createUser() {
+		this.createUser("test","321");
+		System.out.println("Before test");
+	}
+	
+	@After
+	@Rollback(false)
+	public void removeUser() {
+		this.removeUser("test","321");
+		System.out.println("After test");
+	}
 	
 	@Test
 	@Rollback(true)
 	public void queryLoginFailTest() {
 		
-		this.createUser("test", "321");
+		//this.createUser("test", "321");
 
 		loginVO = new LoginVO();
 		loginVO.setAccount("william");
@@ -76,7 +95,7 @@ public class LoginDaoTest {
 	}
 	
 	private void createUser(String name, String password) {
-		SunAccount account = new SunAccount();
+		account = new SunAccount();
 		account.setAccount(name);
 		account.setPassword(password);
 		account.setId("02");
@@ -84,6 +103,13 @@ public class LoginDaoTest {
 		account.setUserId("001");
 		account.setCreateTime(new Date());
 		this.sessionFactory.getCurrentSession().save(account);
+		this.sessionFactory.getCurrentSession().flush();
+	}
+	
+	private void removeUser(String name, String password) {
+		
+		this.sessionFactory.getCurrentSession().delete(account);
+		this.sessionFactory.getCurrentSession().flush();
 	}
 
 }
