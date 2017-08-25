@@ -78,6 +78,37 @@ public class LoginControllerTest {
 	
 	
 	@Test
+	public void testloginValidateNoAccount() throws Exception{
+		
+		LoginInfoVO mockloginInfoVO = new LoginInfoVO();
+		mockloginInfoVO.setIsExist(false);
+		
+		when(mockloginService.validateUser(any(LoginVO.class))).thenReturn(mockloginInfoVO);
+		
+		mockMvc.perform(post("/login/validate") 
+				.param( "account", "" )
+				.param( "password", "123" ))
+		.andDo(print())
+	    .andExpect(content().string("false"));
+	}
+	
+	@Test
+	public void testloginValidateNoPassword() throws Exception{
+		
+		LoginInfoVO mockloginInfoVO = new LoginInfoVO();
+		mockloginInfoVO.setIsExist(false);
+		
+		when(mockloginService.validateUser(any(LoginVO.class))).thenReturn(mockloginInfoVO);
+		
+		mockMvc.perform(post("/login/validate") 
+				.param( "account", "haha" )
+				.param( "password", "" ))
+		.andDo(print())
+		.andExpect(content().string("false"));
+	}
+	
+	
+	@Test
 	public void testloginValidateIsExistFail() throws Exception{
 		
 		LoginInfoVO mockloginInfoVO = new LoginInfoVO();
@@ -85,13 +116,14 @@ public class LoginControllerTest {
 		
 		when(mockloginService.validateUser(any(LoginVO.class))).thenReturn(mockloginInfoVO);
 		
-		mockMvc.perform(post("/login/validate")
+		mockMvc.perform(post("/login/validate") 
 				.param( "account", "haha" )
 				.param( "password", "123" ))
 		.andDo(print())
 		.andExpect(redirectedUrl( "\\pages\\error\\errorSimple.jsp" ))
 		.andExpect(content().string("false"));
 	}
+	
 	
 	@SuppressWarnings("static-access")
 	@Test
